@@ -2,18 +2,6 @@
 
 Note: This is not an official Google product.
 
-
-## 2024 Update - Supported Cordova Android Version 12.0.1
-## Necesary changes to config.xml under platform Android
-```
-    <preference name="android-minSdkVersion" value="24"/>
-    <preference name="android-targetSdkVersion" value="33"/>
-    <preference name="AndroidXEnabled" value="true" />
-    <preference name="GradlePluginKotlinEnabled" value="true" />
-    <preference name="GradlePluginKotlinCodeStyle" value="official" />
-    <preference name="GradlePluginKotlinVersion" value="1.6.20" />
-```
-
 ## Supported Platforms
 
 - __Android__
