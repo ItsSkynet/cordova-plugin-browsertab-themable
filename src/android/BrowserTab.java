@@ -17,10 +17,10 @@ package com.gabfiocchi.cordova.plugin.browsertab;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.customtabs.CustomTabsIntent;
 import android.util.Log;
+import android.content.ActivityNotFoundException;
 
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +34,8 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.graphics.Color;
 
 /**
  * Cordova plugin which provides the ability to launch a URL in an
