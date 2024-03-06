@@ -17,10 +17,10 @@ package com.gabfiocchi.cordova.plugin.browsertab;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
 import android.net.Uri;
-import androidx.browser.customtabs.CustomTabsIntent;
+import android.support.customtabs.CustomTabsIntent;
 import android.util.Log;
-import android.content.ActivityNotFoundException;
 
 import java.util.Iterator;
 import java.util.List;
@@ -34,8 +34,6 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.graphics.Color;
 
 /**
  * Cordova plugin which provides the ability to launch a URL in an
@@ -99,12 +97,6 @@ public class BrowserTab extends CordovaPlugin {
       return;
     }
 
-    String customTabsBrowser = findCustomTabBrowser();
-    if (customTabsBrowser == null) {
-      Log.d(LOG_TAG, "openUrl: no in app browser tab available");
-      callbackContext.error("no in app browser tab implementation available");
-    }
-
     JSONObject themeableArgs;
     try {
         themeableArgs = new JSONObject(args.optString(1));
@@ -116,25 +108,19 @@ public class BrowserTab extends CordovaPlugin {
         Log.d(LOG_TAG, "openUrl themeableArgs: failed to parse theme parameters" + args);
     }
 
-    // Initialize Builder
-    CustomTabsIntent.Builder customTabsIntentBuilder = new CustomTabsIntent.Builder();
-
-    // Set tab color
-    String tabColor = cordova.getActivity().getString(cordova.getActivity().getResources().getIdentifier("CUSTOM_TAB_COLOR_RGB", "string", cordova.getActivity().getPackageName()));
-    customTabsIntentBuilder.setToolbarColor(Color.parseColor(toolbarColor));
-
-    // Create Intent
-    Intent customTabsIntent = customTabsIntentBuilder.build().intent;
-    customTabsIntent.setData(Uri.parse(urlStr));
-    customTabsIntent.setPackage("com.android.chrome");
-    try {
-      cordova.getActivity().startActivity(customTabsIntent);
-    } catch (ActivityNotFoundException ex) {
-      customTabsIntent.setPackage(mCustomTabsBrowser);
-      cordova.getActivity().startActivity(customTabsIntent);
+    String customTabsBrowser = findCustomTabBrowser();
+    if (customTabsBrowser == null) {
+      Log.d(LOG_TAG, "openUrl: no in app browser tab available");
+      callbackContext.error("no in app browser tab implementation available");
     }
-    // Load URL
-    // customTabsIntent.launchUrl(cordova.getActivity(), Uri.parse(urlStr));
+
+    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+    builder.setToolbarColor( Color.parseColor(toolbarColor));
+    builder.addDefaultShareMenuItem();
+    Intent customTabsIntent = builder.build().intent;
+    customTabsIntent.setData(Uri.parse(urlStr));
+    customTabsIntent.setPackage(mCustomTabsBrowser);
+    cordova.getActivity().startActivity(customTabsIntent);
 
     Log.d(LOG_TAG, "in app browser call dispatched");
     callbackContext.success();
